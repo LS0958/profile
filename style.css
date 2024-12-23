@@ -70,6 +70,10 @@ nav li{
     --c:#aa6daa;
     --i:-4;
 }
+.page:nth-child(6){
+    --c:#3f72ca;
+    --i:-5;
+}
 
 .page{
     width: 100%;
