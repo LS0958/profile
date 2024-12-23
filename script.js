@@ -24,9 +24,9 @@ window.addEventListener('scroll', e => {
 
 
 function target(n){
-    console.log(n);
+    console.log(n,max/4*(n-1));
     const e = document.getElementById('page'+n)
-    window.scrollTo(0,max/4*(n-1))
-    e.style.transform=`translateZ(${max/4*(n-1)}px)`;
     scrollp = document.body.scrollTop || document.documentElement.scrollTop;
+    window.scrollTo(0,max/4*(n-1))
+    setTranform();
 }
