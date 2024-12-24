@@ -1,1 +1,38 @@
-ECHO is on.
+*,
+html,
+body,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: #0a0b1e;
+    color: #ececec;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    background: #252825;
+    height: 1600px;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    perspective: 500px;
+    transform-style: preserve-3d;
+    position: fixed;
+}
+
+.slide {
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 1px solid red;
+    transform: translateZ(calc(var(--n) * -100px));
+}
