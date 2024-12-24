@@ -1,38 +1,136 @@
-*,
-html,
-body,
-::after,
-::before {
-    margin: 0;
+*,html,body{
     padding: 0;
+    margin: 0;
     box-sizing: border-box;
-    background: #0a0b1e;
-    color: #ececec;
+    /* border: 1px solid red; */
+}
+::-webkit-scrollbar{
+    display: none;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-    background: #252825;
-    height: 1600px;
+body{
+    width: 100vw;
+    overflow-x: hidden;
+    height: 1200vh;
+    overflow-y: auto;
+    background-color: black;
+    color: white;
+    border: none;
+    scroll-behavior: smooth;
 }
 
-.container {
-    width: 100%;
-    height: 100vh;
-    overflow: auto;
-    perspective: 500px;
-    transform-style: preserve-3d;
+header{
+    height: 10px;
     position: fixed;
-}
-
-.slide {
-    position: absolute;
-    height: 100vh;
     top: 0;
     left: 0;
     width: 100%;
-    border: 1px solid red;
-    transform: translateZ(calc(var(--n) * -100px));
+    z-index: 1;
+    padding: 20px;
+}
+
+nav{
+    display: flex;
+    gap: 30px;
+}
+nav li{
+    list-style: none;
+    cursor: pointer;
+}
+
+.container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    perspective: 500px;
+    /* perspective-origin: 50% 50%; */
+}
+
+.page:nth-child(1){
+    --c:#ff0dff;
+    --i:0;
+}
+.page:nth-child(2){
+    --c:#00ff75;
+    --i:-1;
+}
+.page:nth-child(3){
+    --c:#005cff;
+    --i:-2;
+}
+.page:nth-child(4){
+    --c:#ff9d00;
+    --i:-3;
+    border-radius: 50%;
+}
+.page:nth-child(5){
+    --c:#aa6daa;
+    --i:-4;
+}
+.page:nth-child(6){
+    --c:#3f72ca;
+    --i:-5;
+}
+
+.page{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    border: 1px solid var(--c);
+    box-shadow: inset 0 0 30px var(--c);
+    z-index: var(--i);
+    /* background-color: var(--c);  */
+    /* color: var(--c); */
+    /* transition: all 0.8s cubic-bezier(.22,.7,.86,.4); */
+    transition: all 1s ease-in-out;
+}
+
+
+.card{
+    width: 30%;
+    height: 25%;
+    border-radius: 10px;
+    background-color: #9130ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+.left{
+    margin-left: auto;
+}
+.right{
+    margin-right: auto;
+}
+
+.active{
+    transform: translateZ(0);
+}
+
+.home{
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    border: none;
+    box-shadow: none;
+}
+.home p{
+    padding: 4%;
+    background-color: #1348a344;
+    backdrop-filter: blur(5px);
+    width: 50%;
+    border-radius: 5px;
+}
+.home img{
+    padding: 4%;
+    object-fit: contain;
+    margin: auto;
 }
