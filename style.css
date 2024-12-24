@@ -1,3 +1,25 @@
+@font-face { 
+    font-family: 'BungeeRegular'; 
+    src: url('/assets/font/bungee/Bungee-Regular.ttf') format('truetype'); 
+} 
+@font-face { 
+    font-family: 'BungeeHairline'; 
+    src: url('/assets/font/bungee/BungeeHairline-Regular.ttf') format('truetype'); 
+} 
+@font-face { 
+    font-family: 'BungeeInline'; 
+    src: url('/assets/font/bungee/BungeeInline-Regular.ttf') format('truetype'); 
+} 
+@font-face { 
+    font-family: 'BungeeOutline'; 
+    src: url('/assets/font/bungee/BungeeOutline-Regular.ttf') format('truetype'); 
+} @font-face { 
+    font-family: 'BungeeShade'; 
+    src: url('/assets/font/bungee/BungeeShade-Regular.ttf') format('truetype')
+}
+
+
+
 *,html,body{
     padding: 0;
     margin: 0;
@@ -122,15 +144,35 @@ nav li{
     border: none;
     box-shadow: none;
 }
-.home p{
-    padding: 4%;
+
+.desc{
     background-color: #1348a344;
+    padding: 4%;
     backdrop-filter: blur(5px);
-    width: 50%;
     border-radius: 5px;
+    margin: 0 20px;
+    flex: 1;
+    clip-path: polygon(0% 0%, 100% 0, 100% 81%, 83% 100%, 0% 100%);
 }
+
+.desc h1{
+    padding:0 4%;
+    font-size: 4rem;
+    color: rgb(219, 42, 42);
+    font-family: 'BungeeRegular', sans-serif;
+    /* font-family: 'BungeeHairline', sans-serif; */
+    /* font-family: 'BungeeInline', sans-serif; */
+    /* font-family: 'BungeeOutline', sans-serif; */
+    /* font-family: 'BungeeShade', sans-serif; */
+}
+
+.desc p{
+    padding: 4%;
+}
+
 .home img{
     padding: 4%;
+    flex: 1;
     object-fit: contain;
     margin: auto;
 }
