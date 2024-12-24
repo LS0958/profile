@@ -1,9 +1,11 @@
 const pages = document.querySelectorAll('.page');
+const audio = document.querySelector('#audio');
 const max = document.body.scrollHeight - window.innerHeight;
-let scrollp = 0;
 const totalpages = 5; //except home page
-// let index = 0;
+let scrollp = 0;
+let currentpage = 1;
 
+window.scrollTo(0,0);
 const setTranform = () => {
     pages.forEach((e, i) => {
         setTimeout(() => {
@@ -23,7 +25,20 @@ window.addEventListener('scroll', e => {
 
 
 function target(n) {
-    scrollp = document.body.scrollTop || document.documentElement.scrollTop;
-    window.scrollTo(0, max / totalpages * (n - 1))
-    setTranform();
+    if(currentpage!=n){
+        currentpage=n;
+        audio.src="./assets/click.wav";
+        audio.playbackRate = '2.2';
+        audio.play();
+        audio.onended = function() { 
+            audio.src = './assets/transition.wav'; 
+            audio.playbackRate = '2.0';
+            audio.volume='0.5'
+            audio.play();
+            audio.onended = null;
+        };
+        scrollp = document.body.scrollTop || document.documentElement.scrollTop;
+        window.scrollTo(0, max / totalpages * (n - 1))
+        setTranform();
+    }
 }
