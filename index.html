@@ -8,35 +8,53 @@
 </head>
 <body>
     <header>
-        <nav>
-            <li onclick="target(1)">Home</li>
-            <li onclick="target(2)">Page 1</li>
-            <li onclick="target(3)">Page 2</li>
-            <li onclick="target(4)">Page 3</li>
-            <li onclick="target(5)">Page 4</li>
-            <li onclick="target(6)">Page 5</li>
+        <nav onclick="settransition()">
+            <div class="li" onclick="target(1)">Home</div>
+            <div class="li" onclick="target(2)">Page 1</div>
+            <div class="li" onclick="target(3)">Page 2</div>
+            <div class="li" onclick="target(4)">Page 3</div>
+            <div class="li" onclick="target(5)">Page 4</div>
+            <div class="li" onclick="target(6)">Page 5</div>
         </nav>
     </header>
     <div class="container">
         <section class="page home" id="page1">
-            <div class="desc">
-                <h1>Lal Chand</h1>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique corporis asperiores quod libero sed quidem porro recusandae dolores! Harum reprehenderit quasi enim delectus optio architecto nam consequatur dolores dolore id.</p>
-            </div>
-            <img src="./assets/images/lal.png" alt="" height="100%">
+            <button id="myBtn">Open Modal</button>
+
+            <h1>Welcome to My Portfolio</h1>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique corporis asperiores quod libero sed quidem porro recusandae dolores! Harum reprehenderit quasi enim delectus optio architecto nam consequatur dolores dolore id.</p>
+            <img src="./assets/images/thinking.png" alt="Thinking" height="100%">
         </section>
         <section class="page page2" id="page2">
+            <h2>About Me</h2>
+            <p>Hi, I'm Lal Chand, a passionate web developer with experience in creating dynamic and responsive websites. I specialize in front-end development and have a keen eye for design.</p>
             <div class="card left">card1 page1</div>
             <div class="card right">card2 page1</div>
         </section>
         <section class="page page3" id="page3">
-            <div class="card right">card3 page2</div>
-            <div class="card left">card4 page2</div>
+            <h2>My Projects</h2>
+            <div class="project">
+                <h3>Project 1</h3>
+                <p>A web application that allows users to track their daily tasks and manage their time efficiently.</p>
+            </div>
+            <div class="project">
+                <h3>Project 2</h3>
+                <p>An e-commerce website with a user-friendly interface and secure payment gateway integration.</p>
+            </div>
         </section>
-        <section class="page page4" id="page4">Page 3</section>
-        <section class="page page5" id="page5">Page 4</section>
-        <section class="page page6" id="page6">Page 5</section>
-
+        <section class="page page4" id="page4">
+            <h2>Skills</h2>
+            <ul>
+                <li>HTML, CSS, JavaScript</li>
+                <li>React, Angular</li>
+                <li>Node.js, Express</li>
+                <li>MongoDB, MySQL</li>
+            </ul>
+        </section>
+        <section class="page page5" id="page5">
+            <h2>Contact</h2>
+            <p>If you'd like to get in touch, please email me at <a href="mailto:lalchand@example.com">lalchand@example.com</a>.</p>
+        </section>
     </div>
     <audio hidden id="audio"></audio>
     <script src="script.js"></script>
