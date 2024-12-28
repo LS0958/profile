@@ -8,22 +8,22 @@
 </head>
 <body>
     <header>
-        <nav>
-            <li onclick="target(1)">Home</li>
-            <li onclick="target(2)">Page 1</li>
-            <li onclick="target(3)">Page 2</li>
-            <li onclick="target(4)">Page 3</li>
-            <li onclick="target(5)">Page 4</li>
-            <li onclick="target(6)">Page 5</li>
+        <nav onclick="settransition()">
+            <div class="li" onclick="target(1)">Home</div>
+            <div class="li" onclick="target(2)">Page 1</div>
+            <div class="li" onclick="target(3)">Page 2</div>
+            <div class="li" onclick="target(4)">Page 3</div>
+            <div class="li" onclick="target(5)">Page 4</div>
+            <div class="li" onclick="target(6)">Page 5</div>
         </nav>
     </header>
     <div class="container">
         <section class="page home" id="page1">
-            <div class="desc">
-                <h1>Lal Chand</h1>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique corporis asperiores quod libero sed quidem porro recusandae dolores! Harum reprehenderit quasi enim delectus optio architecto nam consequatur dolores dolore id.</p>
-            </div>
-            <img src="./assets/images/lal.png" alt="" height="100%">
+            <button id="myBtn">Open Modal</button>
+
+            <h1>Welcome to My Portfolio</h1>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique corporis asperiores quod libero sed quidem porro recusandae dolores! Harum reprehenderit quasi enim delectus optio architecto nam consequatur dolores dolore id.</p>
+            <img src="./assets/images/thinking.png" alt="Thinking" height="100%">
         </section>
         <section class="page portfolio" id="page2">
             <div class="desc">
@@ -72,19 +72,9 @@
                 </div>
             </div>
         </section>
-        <section class="page testimonials" id="page6">
-            <div class="desc">
-                <h1>Testimonials</h1>
-                <p>What my clients say:</p>
-                <div class="testimonial-item">
-                    <p>"Lal Chand is an exceptional developer. He delivered our project on time and exceeded our expectations."</p>
-                    <p><strong>- Client A</strong></p>
-                </div>
-                <div class="testimonial-item">
-                    <p>"Working with Lal Chand was a pleasure. His expertise and professionalism are top-notch."</p>
-                    <p><strong>- Client B</strong></p>
-                </div>
-            </div>
+        <section class="page page3" id="page3">
+            <div class="card right">card3 page2</div>
+            <div class="card left">card4 page2</div>
         </section>
     </div>
     <audio hidden id="audio"></audio>
