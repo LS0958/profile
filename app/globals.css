@@ -1,0 +1,383 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #e2e8f0;
+  --neon-cyan: #00f5ff;
+  --neon-purple: #bf00ff;
+  --neon-pink: #ff0080;
+  --neon-green: #00ff88;
+  --neon-orange: #ff6b00;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --grid-line: rgba(0, 245, 255, 0.06);
+  --card-bg: rgba(10, 10, 20, 0.8);
+  --glow-cyan: 0 0 20px rgba(0, 245, 255, 0.4), 0 0 60px rgba(0, 245, 255, 0.15);
+  --glow-purple: 0 0 20px rgba(191, 0, 255, 0.4), 0 0 60px rgba(191, 0, 255, 0.15);
+  --glow-pink: 0 0 20px rgba(255, 0, 128, 0.4), 0 0 60px rgba(255, 0, 128, 0.15);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-green: var(--neon-green);
+  --color-glass-bg: var(--glass-bg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  background: #000000;
+  color-scheme: dark;
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  overflow: hidden;
+  height: 100%;
+  cursor: none;
+  /* Prevent pull-to-refresh on the body level — sections handle their own
+     overscroll via non-passive touchmove listeners in ZScrollSection. */
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 2px; }
+
+/* ── Custom cursor ── */
+/* Use negative left/top offset instead of transform translate so that
+   direct style.transform = "translate(x,y)" centers the element correctly. */
+.cursor-dot {
+  position: fixed;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  left: -18px;
+  top: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 245, 255, 0.5);
+  pointer-events: none;
+  z-index: 99998;
+}
+
+/* Restore OS cursor for interactive & text elements so the user
+   gets the expected visual feedback (I-beam on inputs, pointer on links). */
+input, textarea, [contenteditable] {
+  cursor: text !important;
+}
+button, a, [role="button"], label[for] {
+  cursor: pointer !important;
+}
+
+/* ── Grid overlay ── */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Scanlines ── */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.05) 2px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Glow text ── */
+.glow-cyan { text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px rgba(0,245,255,0.5); }
+.glow-purple { text-shadow: 0 0 10px var(--neon-purple), 0 0 30px rgba(191,0,255,0.5); }
+.glow-pink { text-shadow: 0 0 10px var(--neon-pink), 0 0 30px rgba(255,0,128,0.5); }
+
+/* ── Glass card ── */
+.glass {
+  background: var(--glass-bg);
+  /* Reduced from blur(20px) — each backdrop-filter element requires its own
+     GPU render pass. blur(8px) is perceptually similar but ~6× cheaper. */
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  border: 1px solid var(--glass-border);
+}
+
+/* ── Keyframes ── */
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); clip-path: none; }
+  92% { transform: translate(-3px, 1px); clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); }
+  94% { transform: translate(3px, -1px); clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+  96% { transform: translate(-2px, 2px); clip-path: polygon(0 0%, 100% 0%, 100% 30%, 0 30%); }
+  98% { transform: translate(0); clip-path: none; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(1deg); }
+  66% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-8px) translateX(4px); }
+  75% { transform: translateY(4px) translateX(-4px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,245,255,0.3), 0 0 30px rgba(0,245,255,0.1); }
+  50% { box-shadow: 0 0 25px rgba(0,245,255,0.6), 0 0 60px rgba(0,245,255,0.25), 0 0 100px rgba(0,245,255,0.1); }
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ring-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+@keyframes scanline-sweep {
+  0% { transform: translateY(-100%); opacity: 0.4; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes particle-drift {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-40px) translateX(20px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(-80px) translateX(-10px) scale(0.8); opacity: 0; }
+}
+
+@keyframes border-flow {
+  0%, 100% { border-color: var(--neon-cyan); }
+  33% { border-color: var(--neon-purple); }
+  66% { border-color: var(--neon-pink); }
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes cube-rotate {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes progress-fill {
+  from { stroke-dashoffset: 251; }
+  to { stroke-dashoffset: var(--dash-offset); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hex-pulse {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(0,245,255,0.3)); }
+  50% { filter: drop-shadow(0 0 12px rgba(0,245,255,0.8)); }
+}
+
+/* ── Utility animations ── */
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float2 { animation: float2 8s ease-in-out infinite; }
+.animate-float-delay { animation: float 6s ease-in-out 2s infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-glitch { animation: glitch 8s ease-in-out infinite; }
+.animate-shimmer { animation: shimmer 3s linear infinite; }
+.animate-orbit { animation: orbit 12s linear infinite; }
+.animate-blink { animation: blink 1s step-end infinite; }
+.animate-cube { animation: cube-rotate 20s linear infinite; }
+.animate-scanline { animation: scanline-sweep 4s linear infinite; }
+.animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
+.animate-border-flow { animation: border-flow 4s linear infinite; }
+
+/* ── Gradient text ── */
+.gradient-text-cyan {
+  background: linear-gradient(135deg, #00f5ff, #bf00ff, #00f5ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 4s linear infinite;
+}
+
+.gradient-text-fire {
+  background: linear-gradient(135deg, #ff6b00, #ff0080, #bf00ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+/* ── Z-Scroll perspective wrapper ── */
+.z-scene {
+  position: fixed;
+  inset: 0;
+  /* Increased from 1200px → 1600px: more dramatic depth, sections feel further apart */
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+}
+
+.z-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* ── Section base ── */
+.z-section {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* ── Neon button ── */
+.btn-neon {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: transparent;
+  transition: all 0.3s ease;
+}
+.btn-neon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--neon-cyan);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+.btn-neon:hover::before { transform: scaleX(1); }
+.btn-neon:hover { color: #000; box-shadow: var(--glow-cyan); }
+
+/* ── Hex clip ── */
+.hex-clip {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* ── Profile ring ── */
+.profile-ring-outer {
+  animation: ring-spin 8s linear infinite;
+}
+.profile-ring-inner {
+  animation: ring-spin-reverse 5s linear infinite;
+}
+
+/* ── Tilt card 3D ── */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease;
+}
+
+/* ── Noise texture overlay ── */
+.noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Touch / coarse-pointer devices ─────────────────────────────────── */
+/* Hide custom cursor elements on touch screens — they serve no purpose    */
+/* and restoring the native cursor avoids "cursor: none" confusion on iOS. */
+@media (pointer: coarse) {
+  body { cursor: auto !important; }
+  .cursor-dot, .cursor-ring { display: none !important; }
+
+  /* Reduce perspective on small screens so 3D sections stay in frustum */
+  .z-scene { perspective: 900px !important; }
+
+  /* Slightly loosen the blur on glass panels — mobile GPU has less VRAM */
+  .glass {
+    backdrop-filter: blur(4px) saturate(130%) !important;
+    -webkit-backdrop-filter: blur(4px) saturate(130%) !important;
+  }
+
+  /* Make tap targets comfortably large on touch */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Small screen layout helpers ── */
+@media (max-width: 640px) {
+  /* Contact form: stack the 2-col name/email grid into single column */
+  .contact-grid-2 { grid-template-columns: 1fr !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
