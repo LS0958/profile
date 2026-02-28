@@ -34,7 +34,7 @@ function DownloadOverlay({ show, onDone }: { show: boolean; onDone: () => void }
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[99999] flex items-center justify-center pointer-events-none"
+          className="fixed inset-0 z-99999 flex items-center justify-center pointer-events-none"
           style={{ background: "rgba(0,0,0,0.62)", backdropFilter: "blur(10px)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

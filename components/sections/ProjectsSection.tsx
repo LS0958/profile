@@ -7,6 +7,7 @@ import {
   Play, Pause, Volume2, VolumeX, RotateCcw, Maximize,
 } from "lucide-react";
 import { useSectionAnimKey } from "@/hooks/useSectionAnimKey";
+import { useZScrollContext } from "@/components/ZAxisScroll/ZScrollContext";
 
 type BentoSize = "hero" | "wide" | "tall" | "normal";
 
@@ -26,7 +27,7 @@ interface Project {
   bento: BentoSize;
 }
 
-// sm = 2-col grid, lg = 4-col grid  →  prefixed to avoid breaking 1-col xs layout
+// sm = 2-col grid, lg = 4-col grid
 const BENTO_CLS: Record<BentoSize, string> = {
   hero:   "sm:col-span-2 sm:row-span-2",
   wide:   "sm:col-span-2",
@@ -329,7 +330,6 @@ function BentoCard({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Flip container */}
       <motion.div
         className="relative w-full h-full cursor-pointer"
         style={{ transformStyle: "preserve-3d" }}
@@ -343,7 +343,11 @@ function BentoCard({
         {/* ── FRONT ── */}
         <div
           className="absolute inset-0 glass rounded-2xl overflow-hidden"
-          style={{ backfaceVisibility: "hidden", border: `1px solid ${c}22` }}
+          style={{
+            backfaceVisibility: "hidden",
+            border: isExpanded ? `1px solid ${c}55` : `1px solid ${c}22`,
+            boxShadow: isExpanded ? `0 0 0 1px ${c}22, 0 8px 32px ${c}15` : undefined,
+          }}
         >
           {/* Media zone */}
           <div
@@ -365,8 +369,7 @@ function BentoCard({
                 {project.emoji}
               </span>
             )}
-            <div
-              className="absolute inset-0 pointer-events-none"
+            <div className="absolute inset-0 pointer-events-none"
               style={{
                 background: isWide
                   ? "linear-gradient(to right, transparent 50%, rgba(0,0,0,0.8))"
@@ -374,13 +377,9 @@ function BentoCard({
               }}
             />
             {project.featured && (
-              <div
-                className="absolute top-2.5 left-2.5 text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-full"
-                style={{
-                  background: "rgba(255,107,0,0.2)", color: "#ff6b00",
-                  border: "1px solid rgba(255,107,0,0.45)", fontFamily: "var(--font-geist-mono)",
-                }}
-              >
+              <div className="absolute top-2.5 left-2.5 text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(255,107,0,0.2)", color: "#ff6b00",
+                  border: "1px solid rgba(255,107,0,0.45)", fontFamily: "var(--font-geist-mono)" }}>
                 ★ FEATURED
               </div>
             )}
@@ -396,10 +395,7 @@ function BentoCard({
             }
           >
             <div className="overflow-hidden">
-              <h3
-                className="font-black leading-snug mb-1 text-sm"
-                style={{ color: "rgba(226,232,240,0.97)" }}
-              >
+              <h3 className="font-black leading-snug mb-1 text-sm" style={{ color: "rgba(226,232,240,0.97)" }}>
                 {project.title}
               </h3>
               <p className="text-xs leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
@@ -410,22 +406,20 @@ function BentoCard({
             <div className="flex items-end justify-between gap-1.5 mt-1.5">
               <div className="flex flex-wrap gap-1">
                 {project.tags.slice(0, isTall || isHero ? 3 : 2).map((t) => (
-                  <span
-                    key={t}
-                    className="text-[10px] px-2 py-0.5 rounded-full"
-                    style={{
-                      background: `${c}12`, border: `1px solid ${c}28`, color: c,
-                      fontFamily: "var(--font-geist-mono)",
-                    }}
-                  >
+                  <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
+                    style={{ background: `${c}12`, border: `1px solid ${c}28`, color: c, fontFamily: "var(--font-geist-mono)" }}>
                     {t}
                   </span>
                 ))}
               </div>
-              {/* Expand arrow — stopPropagation so it does NOT flip */}
+              {/* Expand arrow — does NOT flip */}
               <motion.button
-                className="shrink-0 w-7 h-7 glass rounded-full flex items-center justify-center"
-                style={{ border: `1px solid ${c}45` }}
+                className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
+                style={{
+                  border: `1px solid ${c}45`,
+                  background: isExpanded ? `${c}22` : "rgba(255,255,255,0.06)",
+                  boxShadow: isExpanded ? `0 0 12px ${c}40` : undefined,
+                }}
                 onClick={(e) => { e.stopPropagation(); playClick(); onToggleExpand(); }}
                 animate={{ rotate: isExpanded ? 180 : 0, y: isExpanded ? 0 : [0, 3, 0] }}
                 transition={{ rotate: { duration: 0.3 }, y: { repeat: Infinity, duration: 2 } }}
@@ -437,11 +431,15 @@ function BentoCard({
             </div>
           </div>
 
+          {/* Active bottom accent when expanded */}
+          {isExpanded && (
+            <div className="absolute bottom-0 left-0 right-0 h-0.5"
+              style={{ background: `linear-gradient(90deg, transparent, ${c}, transparent)` }} />
+          )}
+
           {/* Flip hint */}
-          <div
-            className="absolute top-2.5 right-2.5 text-[9px] tracking-widest pointer-events-none select-none"
-            style={{ color: c, opacity: 0.28, fontFamily: "var(--font-geist-mono)" }}
-          >
+          <div className="absolute top-2.5 right-2.5 text-[9px] tracking-widest pointer-events-none select-none"
+            style={{ color: c, opacity: 0.28, fontFamily: "var(--font-geist-mono)" }}>
             TAP ↻
           </div>
         </div>
@@ -458,15 +456,11 @@ function BentoCard({
         >
           <div className="absolute top-0 left-0 right-0 h-px"
             style={{ background: `linear-gradient(90deg, transparent, ${c}, transparent)` }} />
-
           <div className="overflow-hidden flex-1">
-            <div className="text-[10px] font-bold tracking-widest mb-2"
-              style={{ color: c, fontFamily: "var(--font-geist-mono)" }}>
+            <div className="text-[10px] font-bold tracking-widest mb-2" style={{ color: c, fontFamily: "var(--font-geist-mono)" }}>
               {project.featured ? "★ FEATURED — " : ""}OVERVIEW
             </div>
-            <h3 className="font-black text-sm mb-2" style={{ color: "rgba(226,232,240,0.97)" }}>
-              {project.title}
-            </h3>
+            <h3 className="font-black text-sm mb-2" style={{ color: "rgba(226,232,240,0.97)" }}>{project.title}</h3>
             <p className="text-xs leading-relaxed mb-3" style={{ color: "rgba(148,163,184,0.78)" }}>
               {project.longDesc.slice(0, isTall || isHero ? 200 : 145)}
               {project.longDesc.length > (isTall || isHero ? 200 : 145) ? "…" : ""}
@@ -474,48 +468,38 @@ function BentoCard({
             <div className="flex flex-wrap gap-1">
               {project.tags.map((t) => (
                 <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
-                  style={{ background: `${c}12`, border: `1px solid ${c}2a`, color: c,
-                    fontFamily: "var(--font-geist-mono)" }}>
+                  style={{ background: `${c}12`, border: `1px solid ${c}2a`, color: c, fontFamily: "var(--font-geist-mono)" }}>
                   {t}
                 </span>
               ))}
             </div>
           </div>
-
-          <div className="flex items-center gap-2 mt-3 pt-2"
-            style={{ borderTop: `1px solid ${c}15` }}>
-            <motion.a
-              href={project.github} target="_blank" rel="noopener noreferrer"
+          <div className="flex items-center gap-2 mt-3 pt-2" style={{ borderTop: `1px solid ${c}15` }}>
+            <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 text-[9px] px-2.5 py-1.5 rounded-lg font-semibold"
               style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)",
                 color: "rgba(226,232,240,0.8)", fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            >
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Github size={10} /> Code
             </motion.a>
-            <motion.a
-              href={project.demo} target="_blank" rel="noopener noreferrer"
+            <motion.a href={project.demo} target="_blank" rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 text-[9px] px-2.5 py-1.5 rounded-lg font-semibold"
               style={{ background: `${c}18`, border: `1px solid ${c}35`, color: c,
                 fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            >
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <ExternalLink size={10} /> Demo
             </motion.a>
             <motion.button
               onClick={(e) => { e.stopPropagation(); playClick(); onToggleExpand(); }}
               className="flex items-center gap-1.5 text-[9px] px-2.5 py-1.5 rounded-lg font-semibold ml-auto"
-              style={{ background: `${c}18`, border: `1px solid ${c}40`, color: c,
-                fontFamily: "var(--font-geist-mono)" }}
+              style={{ background: `${c}18`, border: `1px solid ${c}40`, color: c, fontFamily: "var(--font-geist-mono)" }}
               animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3 }}
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            >
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <ChevronDown size={10} /> {isExpanded ? "Close" : "Details"}
             </motion.button>
           </div>
-
           <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] tracking-widest pointer-events-none select-none"
             style={{ color: c, opacity: 0.2, fontFamily: "var(--font-geist-mono)" }}>
             TAP TO FLIP BACK
@@ -526,150 +510,180 @@ function BentoCard({
   );
 }
 
-/* ─── ExpandPanel ─────────────────────────────────────────── */
+/* ─── ExpandPanel — fixed overlay ────────────────────────── */
 function ExpandPanel({ project, onClose }: { project: Project; onClose: () => void }) {
   const { playClick } = useSound();
   const c = project.color;
 
+  // Close on Escape key
   useEffect(() => {
-    const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", fn);
-    return () => window.removeEventListener("keydown", fn);
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
   return (
     <motion.div
       key={project.id}
-      initial={{ opacity: 0, height: 0, marginTop: 0 }}
-      animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-      exit={{ opacity: 0, height: 0, marginTop: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      style={{ overflow: "hidden" }}
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className="glass rounded-2xl overflow-hidden"
-        style={{ border: `1px solid ${c}35` }}>
-        {/* Top accent line */}
-        <div className="h-px w-full"
-          style={{ background: `linear-gradient(90deg, transparent, ${c}, transparent)` }} />
+      {/* Backdrop */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)" }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        onClick={() => { playClick(); onClose(); }}
+      />
 
-        <div className="p-5 md:p-6">
-          {/* Header */}
-          <div className="flex items-start justify-between mb-5">
-            <div>
-              {project.featured && (
-                <div className="text-[9px] font-bold tracking-widest mb-1"
-                  style={{ color: "#ff6b00", fontFamily: "var(--font-geist-mono)" }}>★ FEATURED</div>
-              )}
-              <h3 className="text-xl md:text-2xl font-black"
-                style={{ color: c, textShadow: `0 0 20px ${c}60` }}>
-                {project.title}
-              </h3>
-              <p className="text-sm mt-0.5" style={{ color: "rgba(148,163,184,0.6)" }}>
-                {project.description}
-              </p>
-            </div>
-            <motion.button
-              className="w-8 h-8 glass rounded-full flex items-center justify-center shrink-0 ml-4 mt-1"
-              style={{ border: "1px solid rgba(255,255,255,0.15)" }}
-              onClick={() => { playClick(); onClose(); }}
-              whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }}
-            >
-              <X size={14} color="rgba(226,232,240,0.7)" />
-            </motion.button>
+      {/* Card — slides up from bottom on mobile, scales in on desktop */}
+      <motion.div
+        className="relative w-full md:max-w-3xl max-h-[88vh] md:max-h-[82vh] flex flex-col rounded-t-3xl md:rounded-2xl overflow-hidden"
+        initial={{ y: 60, scale: 0.97, opacity: 0 }}
+        animate={{ y: 0, scale: 1, opacity: 1 }}
+        exit={{ y: 60, scale: 0.97, opacity: 0 }}
+        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Colored top bar */}
+        <div className="shrink-0 flex items-center gap-3 px-5 py-3"
+          style={{
+            background: `linear-gradient(90deg, ${c}20, ${c}08 80%)`,
+            borderTop: `2px solid ${c}`,
+            borderLeft: `1px solid ${c}35`,
+            borderRight: `1px solid ${c}35`,
+            backdropFilter: "blur(20px)",
+            backgroundColor: "rgba(8,8,12,0.92)",
+          }}>
+          {/* drag handle for mobile */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 md:hidden w-10 h-1 rounded-full"
+            style={{ background: `${c}50` }} />
+          <span className="text-lg mt-1 md:mt-0">{project.emoji}</span>
+          <div className="flex flex-col">
+            <span className="text-sm font-black" style={{ color: c, fontFamily: "var(--font-geist-mono)" }}>
+              {project.title}
+            </span>
+            <span className="text-[10px]" style={{ color: "rgba(148,163,184,0.45)", fontFamily: "var(--font-geist-mono)" }}>
+              project details
+            </span>
           </div>
+          <motion.button
+            className="ml-auto w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: "rgba(255,255,255,0.12)", border: `1.5px solid rgba(255,255,255,0.28)` }}
+            onClick={() => { playClick(); onClose(); }}
+            whileHover={{ scale: 1.12, rotate: 90 }}
+            whileTap={{ scale: 0.88 }}
+          >
+            <X size={16} color="rgba(226,232,240,0.95)" strokeWidth={2.5} />
+          </motion.button>
+        </div>
 
-          {/* Two-column layout */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Left: video or emoji + stats */}
-            <div>
-              {project.videoUrl ? (
-                <VideoPlayer src={project.videoUrl} color={c} />
-              ) : (
-                <div className="rounded-xl flex items-center justify-center"
-                  style={{ height: 200, background: `${c}08`, border: `1px solid ${c}18` }}>
-                  <span className="text-8xl">{project.emoji}</span>
-                </div>
-              )}
-              {project.stats && (
-                <div className="grid grid-cols-3 gap-2 mt-3">
-                  {project.stats.map((st, si) => (
-                    <motion.div
-                      key={st.label}
-                      className="text-center py-2.5 rounded-xl"
-                      style={{ background: `${c}09`, border: `1px solid ${c}18` }}
-                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.05 + si * 0.06 }}
-                    >
-                      <div className="font-black text-base" style={{ color: c }}>{st.value}</div>
-                      <div className="text-[9px] mt-0.5"
-                        style={{ color: "rgba(148,163,184,0.5)", fontFamily: "var(--font-geist-mono)" }}>
-                        {st.label}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Right: long desc + tags + links */}
-            <div className="flex flex-col gap-4">
-              <p className="text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.82)" }}>
-                {project.longDesc}
-              </p>
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1"
+          style={{
+            background: "rgba(8,8,12,0.96)",
+            border: `1px solid ${c}28`,
+            borderTop: "none",
+            scrollbarWidth: "thin",
+            scrollbarColor: `${c}30 transparent`,
+          }}>
+          <div className="p-5 md:p-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Left: video/emoji + stats */}
               <div>
-                <div className="text-[9px] font-bold tracking-widest mb-2"
-                  style={{ color: "rgba(148,163,184,0.35)", fontFamily: "var(--font-geist-mono)" }}>
-                  TECH STACK
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map((tag, ti) => (
-                    <motion.span key={tag}
-                      className="text-xs px-2.5 py-1 rounded-full"
-                      style={{ background: `${c}12`, border: `1px solid ${c}28`, color: c,
-                        fontFamily: "var(--font-geist-mono)" }}
-                      initial={{ opacity: 0, scale: 0.75 }} animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.05 + ti * 0.04, type: "spring", bounce: 0.4 }}
-                    >
-                      {tag}
-                    </motion.span>
-                  ))}
-                </div>
+                {project.videoUrl ? (
+                  <VideoPlayer src={project.videoUrl} color={c} />
+                ) : (
+                  <div className="rounded-xl flex items-center justify-center"
+                    style={{ height: 200, background: `${c}08`, border: `1px solid ${c}18` }}>
+                    <span className="text-8xl">{project.emoji}</span>
+                  </div>
+                )}
+                {project.stats && (
+                  <div className="grid grid-cols-3 gap-2 mt-3">
+                    {project.stats.map((st, si) => (
+                      <motion.div key={st.label} className="text-center py-2.5 rounded-xl"
+                        style={{ background: `${c}09`, border: `1px solid ${c}18` }}
+                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 + si * 0.06 }}>
+                        <div className="font-black text-base" style={{ color: c }}>{st.value}</div>
+                        <div className="text-[9px] mt-0.5"
+                          style={{ color: "rgba(148,163,184,0.5)", fontFamily: "var(--font-geist-mono)" }}>
+                          {st.label}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="flex gap-3 mt-auto">
-                <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
-                  onClick={() => playClick()}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold"
-                  style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)",
-                    color: "rgba(226,232,240,0.85)", fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
-                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                >
-                  <Github size={14} /> GitHub
-                </motion.a>
-                <motion.a href={project.demo} target="_blank" rel="noopener noreferrer"
-                  onClick={() => playClick()}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold"
-                  style={{ background: `${c}18`, border: `1px solid ${c}35`, color: c,
-                    fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
-                  whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                >
-                  <ExternalLink size={14} /> Live Demo
-                </motion.a>
+
+              {/* Right: desc + tags + links */}
+              <div className="flex flex-col gap-4">
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(148,163,184,0.82)" }}>
+                  {project.longDesc}
+                </p>
+                <div>
+                  <div className="text-[9px] font-bold tracking-widest mb-2"
+                    style={{ color: "rgba(148,163,184,0.35)", fontFamily: "var(--font-geist-mono)" }}>
+                    TECH STACK
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tags.map((tag, ti) => (
+                      <motion.span key={tag} className="text-xs px-2.5 py-1 rounded-full"
+                        style={{ background: `${c}12`, border: `1px solid ${c}28`, color: c, fontFamily: "var(--font-geist-mono)" }}
+                        initial={{ opacity: 0, scale: 0.75 }} animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.05 + ti * 0.04, type: "spring", bounce: 0.4 }}>
+                        {tag}
+                      </motion.span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex gap-3 mt-auto">
+                  <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
+                    onClick={() => playClick()}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold"
+                    style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)",
+                      color: "rgba(226,232,240,0.85)", fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
+                    whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                    <Github size={14} /> GitHub
+                  </motion.a>
+                  <motion.a href={project.demo} target="_blank" rel="noopener noreferrer"
+                    onClick={() => playClick()}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold"
+                    style={{ background: `${c}18`, border: `1px solid ${c}35`, color: c,
+                      fontFamily: "var(--font-geist-mono)", textDecoration: "none" }}
+                    whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                    <ExternalLink size={14} /> Live Demo
+                  </motion.a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
 
 /* ─── ProjectsSection ─────────────────────────────────────── */
+// Projects section is at index 3 in the Z-scroll stack
+const PROJECTS_SECTION_INDEX = 3;
+
 export function ProjectsSection() {
   const animKey = useSectionAnimKey(3);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const { playClick } = useSound();
-
+  const { currentIndex } = useZScrollContext();
   const expandedProject = PROJECTS.find((p) => p.id === expandedId) ?? null;
+
+  // Auto-close overlay when user navigates away from the Projects section
+  useEffect(() => {
+    if (currentIndex !== PROJECTS_SECTION_INDEX) {
+      setExpandedId(null);
+    }
+  }, [currentIndex]);
 
   const toggleExpand = (id: number) => {
     playClick();
@@ -697,11 +711,11 @@ export function ProjectsSection() {
           <h2 className="text-4xl md:text-5xl font-black gradient-text-cyan">Projects</h2>
           <p className="mt-3 text-sm" style={{ color: "rgba(148,163,184,0.55)" }}>
             <span style={{ color: "var(--neon-cyan)" }}>Tap</span> card to flip for overview ·{" "}
-            <span style={{ color: "var(--neon-purple)" }}>↓ Arrow</span> to expand full details
+            <span style={{ color: "var(--neon-purple)" }}>↓ Arrow</span> to expand details in place
           </p>
         </motion.div>
 
-        {/* Bento grid — 1 col on xs, 2 on sm, 4 on lg */}
+        {/* Bento grid — 1 col xs, 2 col sm, 4 col lg */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" style={{ gridAutoRows: "280px" }}>
           {PROJECTS.map((project, i) => (
             <BentoCard
@@ -714,7 +728,7 @@ export function ProjectsSection() {
           ))}
         </div>
 
-        {/* Inline expand panel */}
+        {/* Fixed overlay — rendered into a portal-like fixed position */}
         <AnimatePresence mode="wait">
           {expandedProject && (
             <ExpandPanel
