@@ -1,0 +1,221 @@
+@font-face {
+    font-family: 'Bungee';
+    src: url('/assets/font/bungee/Bungee-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BungeeHairline';
+    src: url('/assets/font/bungee/BungeeHairline-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BungeeInline';
+    src: url('/assets/font/bungee/BungeeInline-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BungeeOutline';
+    src: url('/assets/font/bungee/BungeeOutline-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'BungeeShade';
+    src: url('/assets/font/bungee/BungeeShade-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Course';
+    src: url('/assets/font/course/Course.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'NexaRustExtras';
+    src: url('/assets/font/nexa-rust/NexaRustExtras-Free.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'NexaRustHandmade';
+    src: url('/assets/font/nexa-rust/NexaRustHandmade-Extended.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'NexaRustSans';
+    src: url('/assets/font/nexa-rust/NexaRustSans-Black.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'NexaRustScript';
+    src: url('/assets/font/nexa-rust/NexaRustScriptL-0.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'NexaRustSlab';
+    src: url('/assets/font/nexa-rust/NexaRustSlab-BlackShadow01.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'OrganicalPersonalUse';
+    src: url('/assets/font/organical-personal-use/ORGANICAL PERSONAL USE.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'StrenuousBl';
+    src: url('/assets/font/strenuous/Strenuous Bl.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Strenuous3d';
+    src: url('/assets/font/strenuous/Strenuous 3d.otf') format('opentype');
+}
+
+*,html,body{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* border: 1px solid red; */
+}
+::-webkit-scrollbar{
+    display: none;
+}
+
+body{
+    width: 100vw;
+    overflow-x: hidden;
+    height: 1200vh;
+    overflow-y: auto;
+    background-color: black;
+    color: white;
+    border: none;
+    scroll-behavior: smooth;
+    font-family: 'Bungee', sans-serif;
+}
+
+header{
+    height: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    padding: 20px;
+}
+
+nav{
+    display: flex;
+    gap: 30px;
+}
+nav .li{
+    list-style: none;
+    cursor: pointer;
+}
+
+.container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    perspective: 500px;
+    background: url(/assets/images/neptune.jpg) center center/cover no-repeat;
+    /* perspective-origin: 50% 50%; */
+}
+
+section{
+    overflow-y: auto;
+}
+.page:nth-child(1){
+    --c:#ff0dff;
+    --i:0;
+}
+.page:nth-child(2){
+    --c:#00ff75;
+    --i:-1;
+}
+.page:nth-child(3){
+    --c:#005cff;
+    --i:-2;
+}
+.page:nth-child(4){
+    --c:#ff9d00;
+    --i:-3;
+}
+.page:nth-child(5){
+    --c:#aa6daa;
+    --i:-4;
+}
+.page:nth-child(6){
+    --c:#3f72ca;
+    --i:-5;
+}
+
+.page{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    border: 1px solid var(--c);
+    box-shadow: inset 0 0 30px var(--c);
+    z-index: var(--i);
+    transition: transform 1s ease;
+    -webkit-transition: transform 1s ease;
+    -moz-transition: transform 1s ease;
+    -ms-transition: transform 1s ease;
+    -o-transition: transform 1s ease;
+}
+
+
+.card{
+    width: 30%;
+    height: 25%;
+    border-radius: 10px;
+    background-color: #9130ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+.left{
+    margin-left: auto;
+}
+.right{
+    margin-right: auto;
+}
+
+.active{
+    transform: translateZ(0);
+}
+
+.home{
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    border: none;
+    box-shadow: none;
+}
+
+.desc{
+    padding: 4%;
+    background-color: #1348a344;
+    backdrop-filter: blur(5px);
+    width: 50%;
+    border-radius: 5px;
+}
+
+.home img{
+    padding: 4%;
+    object-fit: contain;
+    margin: auto;
+}
+
+h1 {
+    font-family: 'BungeeOutline', sans-serif;
+}
+
+p {
+    font-family: 'BungeeHairline', sans-serif;
+}

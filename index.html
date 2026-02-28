@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lal Chand</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav onclick="settransition()">
+            <div class="li" onclick="target(1)">Home</div>
+            <div class="li" onclick="target(2)">Page 1</div>
+            <div class="li" onclick="target(3)">Page 2</div>
+            <div class="li" onclick="target(4)">Page 3</div>
+            <div class="li" onclick="target(5)">Page 4</div>
+            <div class="li" onclick="target(6)">Page 5</div>
+        </nav>
+    </header>
+    <div class="container">
+        <section class="page home" id="page1">
+            <div class="desc">
+                <h1>Welcome to My Portfolio</h1>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique corporis asperiores quod libero
+                    sed quidem porro recusandae dolores! Harum reprehenderit quasi enim delectus optio architecto nam
+                    consequatur dolores dolore id.</p>
+            </div>
+            <img src="./assets/images/thinking.png" alt="Thinking" height="100%">
+        </section>
+        <section class="page portfolio" id="page2">
+            <div class="desc">
+                <h1>Portfolio</h1>
+                <p>Here are some of my recent projects:</p>
+                <ul>
+                    <li><strong>Project 1:</strong> A web application for managing tasks.</li>
+                    <li><strong>Project 2:</strong> An e-commerce website for selling products online.</li>
+                    <li><strong>Project 3:</strong> A mobile app for tracking fitness activities.</li>
+                </ul>
+            </div>
+        </section>
+        <section class="page about" id="page3">
+            <div class="desc">
+                <h1>About Me</h1>
+                <p>I am a web developer with a passion for creating interactive and user-friendly websites. I have
+                    experience in HTML, CSS, JavaScript, and various frameworks.</p>
+                <img src="./assets/images/about.png" alt="About Me" class="section-image">
+            </div>
+        </section>
+        <section class="page contact" id="page4">
+            <div class="desc">
+                <h1>Contact</h1>
+                <p>You can reach me at:</p>
+                <ul>
+                    <li>Email: lal@example.com</li>
+                    <li>Phone: 123-456-7890</li>
+                </ul>
+                <img src="./assets/images/contact.png" alt="Contact" class="section-image">
+            </div>
+        </section>
+        <section class="page portfolio" id="page5">
+            <div class="desc">
+                <h1>Portfolio</h1>
+                <p>Here are some of my recent projects:</p>
+                <div class="portfolio-item">
+                    <img src="./assets/images/project1.png" alt="Project 1" class="portfolio-image">
+                    <p><strong>Project 1:</strong> A web application for managing tasks.</p>
+                </div>
+                <div class="portfolio-item">
+                    <img src="./assets/images/project2.png" alt="Project 2" class="portfolio-image">
+                    <p><strong>Project 2:</strong> An e-commerce website for selling products online.</p>
+                </div>
+                <div class="portfolio-item">
+                    <img src="./assets/images/project3.png" alt="Project 3" class="portfolio-image">
+                    <p><strong>Project 3:</strong> A mobile app for tracking fitness activities.</p>
+                </div>
+            </div>
+        </section>
+        <section class="page page3" id="page3">
+            <div class="card right">card3 page2</div>
+            <div class="card left">card4 page2</div>
+        </section>
+    </div>
+    <audio hidden id="audio"></audio>
+    <script src="script.js"></script>
+</body>
+
+</html>
